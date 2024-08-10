@@ -8,22 +8,33 @@ import {NgTemplateOutlet} from "@angular/common";
     standalone: true,
     template: `
         <div class="widget-header">
-            <ng-container [ngTemplateOutlet]=" headerTemplate|| defaultWidgetHeader"></ng-container>
+            <ng-container [ngTemplateOutlet]="headerTemplate|| defaultWidgetHeader"></ng-container>
+            <ng-template #defaultWidgetHeader>
+                <div class="widget-title">Weather Forecast</div>
+                <div class="widget-sub-title">Current weather in your location</div>
+            </ng-template>
         </div>
         <div class="widget-content">
-            <div class="sky-condition">{{ state.data.skyCondition === 'sunny' ? '☀️' : '☁️' }}</div>
-            <div class="temperature">{{ state.data.temperature }}°C</div>
+            <ng-container [ngTemplateOutlet]="contentTemplate || defaultWidgetContent"
+                          [ngTemplateOutletContext]="{$implicit: state}"></ng-container>
+            <ng-template #defaultWidgetContent>
+                <div class="sky-condition">{{ state.data.skyCondition === 'sunny' ? '☀️' : '☁️' }}</div>
+                <div class="temperature">{{ state.data.temperature }}°C</div>
+            </ng-template>
         </div>
         <div class="widget-actions">
-            <button (click)="actions.reload()">Reload</button>
-            <button (click)="actions.copyData()">Copy Info</button>
+            <ng-container [ngTemplateOutlet]="actionTemplate || defaultWidgetAction"
+                          [ngTemplateOutletContext]="{$implicit: actions}"></ng-container>
+            <ng-template #defaultWidgetAction>
+                <button (click)="actions.reload()">Reload</button>
+                <button (click)="actions.copyData()">Copy Info</button>
+            </ng-template>
         </div>
 
 
-        <ng-template #defaultWidgetHeader>
-            <div class="widget-title">Weather Forecast</div>
-            <div class="widget-sub-title">Current weather in your location</div>
-        </ng-template>
+
+
+
     `,
     styleUrls: ['./weather-widget.component.css'],
     imports: [
@@ -36,6 +47,8 @@ export class WeatherWidgetComponent {
     actions = inject(WidgetActions);
 
     @Input() headerTemplate!: TemplateRef<any>
+    @Input() contentTemplate!: TemplateRef<WidgetState>
+    @Input() actionTemplate!: TemplateRef<WidgetActions>
 
     /*  @ViewChild('container', {read: ViewContainerRef}) container!: ViewContainerRef;
       @ViewChild('defaultWidgetHeader') headerTemplate!: TemplateRef<any>;
