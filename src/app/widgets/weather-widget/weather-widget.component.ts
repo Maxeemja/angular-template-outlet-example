@@ -1,4 +1,4 @@
-import {Component, inject, Input, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, inject, Injector, Input, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {WidgetActions} from '../widget-actions.service';
 import {WidgetState} from '../widget-state.service';
 import {NgTemplateOutlet} from "@angular/common";
@@ -24,7 +24,7 @@ import {NgTemplateOutlet} from "@angular/common";
         </div>
         <div class="widget-actions">
             <ng-container [ngTemplateOutlet]="actionTemplate || defaultWidgetAction"
-                          [ngTemplateOutletContext]="{$implicit: actions}"></ng-container>
+                          [ngTemplateOutletInjector]="injector"></ng-container>
             <ng-template #defaultWidgetAction>
                 <button (click)="actions.reload()">Reload</button>
                 <button (click)="actions.copyData()">Copy Info</button>
@@ -43,12 +43,14 @@ import {NgTemplateOutlet} from "@angular/common";
     providers: [WidgetActions, WidgetState]
 })
 export class WeatherWidgetComponent {
-    state = inject(WidgetState);
-    actions = inject(WidgetActions);
-
     @Input() headerTemplate!: TemplateRef<any>
     @Input() contentTemplate!: TemplateRef<WidgetState>
     @Input() actionTemplate!: TemplateRef<WidgetActions>
+
+    state = inject(WidgetState);
+    actions = inject(WidgetActions);
+    injector = inject(Injector);
+
 
     /*  @ViewChild('container', {read: ViewContainerRef}) container!: ViewContainerRef;
       @ViewChild('defaultWidgetHeader') headerTemplate!: TemplateRef<any>;

@@ -1,12 +1,16 @@
 import {Component} from '@angular/core';
 import {WeatherWidgetComponent} from './widgets/weather-widget/weather-widget.component';
+import {WeatherCustomActionComponent} from "./widgets/weather-custom-action/weather-custom-action.component";
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [WeatherWidgetComponent],
+    imports: [WeatherWidgetComponent, WeatherCustomActionComponent],
     template: `
-        <weather-widget [headerTemplate]="altWidgetHeader" [contentTemplate]="altWidgetContent" [actionTemplate]="altWidgetActions"></weather-widget>
+        <weather-widget [headerTemplate]="altWidgetHeader"
+                        [contentTemplate]="altWidgetContent"
+                        [actionTemplate]="altWidgetActions"></weather-widget>
+        
         <ng-template #altWidgetHeader>
             <div class="alt-header">Today's weather</div>
         </ng-template>
@@ -27,15 +31,8 @@ import {WeatherWidgetComponent} from './widgets/weather-widget/weather-widget.co
             </div>
         </ng-template>
 
-        <ng-template #altWidgetActions let-actions>
-            <div>
-                <button (click)="actions.reload()">
-                    Reloaaaaddd2
-                </button>
-                <button (click)="actions.copyData()">
-                    COPY 2
-                </button>
-            </div>
+        <ng-template #altWidgetActions>
+            <app-weather-custom-action></app-weather-custom-action>
         </ng-template>
     `,
     styles: [`
